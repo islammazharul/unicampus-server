@@ -38,6 +38,7 @@ async function run() {
         // college info apis
         const collegesCollection = client.db("collegesDB").collection("colleges");
         const usersCollection = client.db("collegesDB").collection("users");
+        const admissionCollection = client.db("collegesDB").collection("admission");
 
         app.get("/colleges", async (req, res) => {
             const result = await collegesCollection.find().toArray()
@@ -63,6 +64,23 @@ async function run() {
                 return res.send({ message: "User already exist" })
             }
             const result = await usersCollection.insertOne(user);
+            res.send(result)
+        })
+
+        app.get("/admission", async (req, res) => {
+            const result = await admissionCollection.find().toArray();
+            res.send(result)
+        })
+
+        app.get("/admission/:email", async (req, res) => {
+            const email = req.params?.email;
+            const result = await admissionCollection.find({ email }).toArray()
+            res.send(result)
+        })
+
+        app.post("/admission", async (req, res) => {
+            const admission = req.body;
+            const result = await admissionCollection.insertOne(admission);
             res.send(result)
         })
 
